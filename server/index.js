@@ -3,16 +3,17 @@ const cors = require("cors");
 const app = express();
 const PORT = 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// মক ডাটা (Product List)
-const items = [
+// প্রাথমিক মক ডাটা (Database-এর মতো কাজ করবে)
+let items = [
   {
     id: 1,
     name: "Premium Wireless Headphones",
     description:
-      "Experience high-quality sound with noise-canceling technology.",
+      "Experience high-quality sound with noise-canceling technology and 40-hour battery life.",
     price: 199,
     category: "Electronics",
     image:
@@ -22,7 +23,7 @@ const items = [
     id: 2,
     name: "Modern Smart Watch",
     description:
-      "Stay connected and track your fitness with this sleek smartwatch.",
+      "Stay connected and track your fitness with this sleek and water-resistant smartwatch.",
     price: 249,
     category: "Gadgets",
     image:
@@ -31,7 +32,8 @@ const items = [
   {
     id: 3,
     name: "Minimalist Leather Backpack",
-    description: "Durable and stylish backpack for your daily adventures.",
+    description:
+      "Handcrafted from genuine leather, perfect for carrying your laptop and daily essentials.",
     price: 89,
     category: "Fashion",
     image:
@@ -40,7 +42,8 @@ const items = [
   {
     id: 4,
     name: "Ultra HD Action Camera",
-    description: "Capture your best moments in stunning 4K resolution.",
+    description:
+      "Capture your adventures in stunning 4K. Waterproof up to 30 meters with wide-angle lens.",
     price: 150,
     category: "Electronics",
     image:
@@ -48,18 +51,33 @@ const items = [
   },
 ];
 
-// API Endpoint: সব আইটেম পাওয়ার জন্য
+// ১. সব আইটেম পাওয়ার এপিআই (GET)
 app.get("/api/items", (req, res) => {
   res.json(items);
 });
 
-// API Endpoint: সিঙ্গেল আইটেম পাওয়ার জন্য
+// ২. নির্দিষ্ট একটি আইটেম পাওয়ার এপিআই (GET)
 app.get("/api/items/:id", (req, res) => {
   const item = items.find((i) => i.id === parseInt(req.params.id));
   if (!item) return res.status(404).send("Item not found");
   res.json(item);
 });
 
+// ৩. নতুন আইটেম যোগ করার এপিআই (POST) - এটি শুধুমাত্র প্রোটেক্টেড পেজ থেকে কল হবে
+app.post("/api/items", (req, res) => {
+  const newItem = {
+    id: items.length > 0 ? Math.max(...items.map((i) => i.id)) + 1 : 1,
+    name: req.body.name,
+    description: req.body.description,
+    price: req.body.price,
+    category: req.body.category,
+    image: req.body.image,
+  };
+
+  items.unshift(newItem);
+  res.status(201).json(newItem);
+});
+
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`SimpleMart Server is running on http://localhost:${PORT}`);
 });
