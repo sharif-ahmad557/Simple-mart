@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
@@ -28,7 +26,6 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
-      <Navbar />
 
       <div className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 lg:grid-cols-2 gap-16">
         {/* Contact Info */}
@@ -138,7 +135,6 @@ export default function ContactPage() {
         </motion.div>
       </div>
 
-      <Footer />
     </main>
   );
 }

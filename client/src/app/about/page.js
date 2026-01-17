@@ -1,6 +1,4 @@
 "use client";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { Target, Eye, Heart, ShieldCheck } from "lucide-react";
 
@@ -30,9 +28,6 @@ export default function AboutPage() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
-      <Navbar />
-
-      {/* Hero Section */}
       <section className="py-20 bg-gray-50 dark:bg-slate-900/50">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <motion.h1
@@ -83,8 +78,6 @@ export default function AboutPage() {
           />
         </div>
       </section>
-
-      <Footer />
     </main>
   );
 }

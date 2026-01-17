@@ -12,10 +12,6 @@ import Newsletter from "@/components/landing/Newsletter";
 export default function Home() {
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950">
-      {/* নেভবার সবার উপরে */}
-      <Navbar />
-
-      {/* ল্যান্ডিং পেজের ৭টি সেকশন */}
       <Hero />
       <Features />
       <Categories />
