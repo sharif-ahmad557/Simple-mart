@@ -4,8 +4,6 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -17,12 +15,10 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    // ১.৫ সেকেন্ড ডিলে যাতে ইউজার বুঝতে পারে কাজ হচ্ছে
     setTimeout(() => {
       if (email.trim() === "admin@simplemart.com" && password === "123456") {
-        // --- সরাসরি ব্রাউজার কুকি সেট করার পদ্ধতি ---
         const d = new Date();
-        d.setTime(d.getTime() + 7 * 24 * 60 * 60 * 1000); // ৭ দিন মেয়াদ
+        d.setTime(d.getTime() + 7 * 24 * 60 * 60 * 1000); 
         let expires = "expires=" + d.toUTCString();
 
         // কুকি রাইট করা হচ্ছে
@@ -31,9 +27,7 @@ export default function LoginPage() {
 
         toast.success("Login Successful! Welcome to SimpleMart.");
 
-        // ২. সাকসেস হওয়ার পর হার্ড রিফ্লেক্স রিডাইরেক্ট
         setTimeout(() => {
-          // router.push এর বদলে window.location ব্যবহার করছি যাতে ডাটা রিফ্রেশ হয়
           window.location.href = "/items";
         }, 1000);
       } else {
@@ -45,7 +39,6 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
-      <Navbar />
       <div className="flex items-center justify-center py-24 px-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -111,7 +104,6 @@ export default function LoginPage() {
           </form>
         </motion.div>
       </div>
-      <Footer />
     </main>
   );
 }
