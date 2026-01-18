@@ -1,21 +1,24 @@
 # 🛒 SimpleMart - Premium E-commerce Management System
 
-<!-- এই লাইনে আপনার প্রজেক্টের একটি স্ক্রিনশট বা ফটোর লিঙ্ক দিন -->
-![SimpleMart Preview](আপনার_প্রজেক্টের_একটি_ছবির_লিঙ্ক_এখানে_বসান)
+
+![https://i.postimg.cc/FHY09cV2/Screenshot-7.png]
 
 SimpleMart is a modern full-stack application built with **Next.js 15 (App Router)** and **Express.js**.
 
 ## 🚀 Live Demo
+
 - **Frontend (Next.js):** [এখানে আপনার ভার্সেল লাইভ লিঙ্কটি বসান]
 - **Backend (Express):** [এখানে আপনার ব্যাকএন্ড সার্ভার লিঙ্কটি বসান]
 - **GitHub Repository:** [এখানে আপনার গিটহাব লিঙ্কটি বসান]
 
 ---
+
 SimpleMart is a modern full-stack application built with **Next.js 15 (App Router)** and **Express.js**. It is designed to be a fast, responsive, and visually stunning platform for managing products.
 
 ---
 
 ## 🛠️ Tech Stack & Technologies
+
 - **Frontend:** Next.js 15, Tailwind CSS v4, Framer Motion.
 - **Backend:** Express.js, Mongoose (MongoDB).
 - **Database:** MongoDB Atlas (Cloud Database).
@@ -26,7 +29,9 @@ SimpleMart is a modern full-stack application built with **Next.js 15 (App Route
 ---
 
 ## ✅ Core Requirements Fulfilled
+
 These features were implemented strictly following the project requirement sheet:
+
 - **Landing Page:** 7 professional sections (Hero, Features, Categories, Stats, Testimonials, About, Newsletter).
 - **Authentication:** Mock login system using `admin@simplemart.com` / `123456`.
 - **Session Management:** Storing credentials in secure browser cookies.
@@ -38,14 +43,16 @@ These features were implemented strictly following the project requirement sheet
 ---
 
 ## 🔥 Bonus Features (Implemented Beyond Requirements)
+
 To make the project production-ready and user-friendly, I added the following extra features:
+
 1. **Search System:** Real-time product searching on the Items page.
 2. **Category Filtering:** Filter products by categories (Electronics, Gadgets, etc.) with smooth animations.
 3. **Full Shopping Cart:** A persistent cart system using LocalStorage with a real-time badge in the Navbar.
-4. **Admin Dashboard (CRUD):** 
+4. **Admin Dashboard (CRUD):**
    - **Edit Item:** Admins can update product info (Name, Price, Desc) from the UI.
    - **Delete Item:** Admins can permanently remove items with SweetAlert2 confirmation.
-5. **Advanced Animations:** 
+5. **Advanced Animations:**
    - **Hero Carousel:** Automatic 5-slide image & text slider.
    - **Icon Rotation:** Features icons rotate 180° on hover.
    - **Infinite Ticker:** Testimonials scroll infinitely from right to left.
@@ -60,8 +67,10 @@ To make the project production-ready and user-friendly, I added the following ex
 1. **Clone the Repo:**
    ```bash
    git clone https://github.com/your-username/simple-mart.git
+   ```
 
 ## Backend Setup:
+
 ```bash
  cd server
 npm install
@@ -76,6 +85,8 @@ cd client
 npm install
 npm run dev
 ```
+
 ## 🔑Mock Credentials
+
 Email: admin@simplemart.com
 Password: 123456
