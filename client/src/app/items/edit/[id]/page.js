@@ -24,7 +24,9 @@ export default function EditItemPage() {
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/items/${id}`);
+        const res = await axios.get(
+          `https://simple-mart-lnkp.vercel.app/api/items/${id}`,
+        );
         setFormData(res.data);
       } catch (err) {
         toast.error("Failed to load item data");
@@ -37,7 +39,10 @@ export default function EditItemPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.put(`http://localhost:5000/api/items/${id}`, formData);
+      await axios.put(
+        `https://simple-mart-lnkp.vercel.app/api/items/${id}`,
+        formData,
+      );
       Swal.fire("Updated!", "Product info has been updated.", "success");
       router.push(`/items/${id}`);
     } catch (err) {

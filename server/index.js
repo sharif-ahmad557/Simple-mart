@@ -37,6 +37,9 @@ app.get("/api/items", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+app.get("/", (req, res) => {
+  res.send("🚀 SimpleMart API is running successfully!");
+});
 
 // ৪. সিঙ্গেল আইটেম পাওয়ার API (GET)
 app.get("/api/items/:id", async (req, res) => {
@@ -89,6 +92,4 @@ app.delete("/api/items/:id", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-});
+module.exports = app;

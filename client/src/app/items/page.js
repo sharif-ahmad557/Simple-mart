@@ -15,7 +15,9 @@ export default function ItemsPage() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/items");
+        const response = await axios.get(
+          "https://simple-mart-lnkp.vercel.app/api/items",
+        );
         setItems(response.data);
         setFilteredItems(response.data); // শুরুতে সব আইটেম দেখাবে
       } catch (error) {
@@ -39,7 +41,7 @@ export default function ItemsPage() {
     // সার্চ কুয়েরি অনুযায়ী ফিল্টার
     if (searchQuery) {
       result = result.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -56,7 +58,6 @@ export default function ItemsPage() {
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
-
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* ১. হেডার সেকশন */}
         <div className="mb-12 text-center">
@@ -171,7 +172,6 @@ export default function ItemsPage() {
           </motion.div>
         )}
       </div>
-
     </main>
   );
 }

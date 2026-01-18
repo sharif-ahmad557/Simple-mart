@@ -30,7 +30,7 @@ export default function ItemDetails() {
     const fetchItemDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/items/${id}`,
+          `https://simple-mart-lnkp.vercel.app/api/items/${id}`,
         );
         setItem(response.data);
       } catch (error) {
@@ -80,7 +80,9 @@ export default function ItemDetails() {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/api/items/${id}`);
+        await axios.delete(
+          `https://simple-mart-lnkp.vercel.app/api/items/${id}`,
+        );
         Swal.fire("Deleted!", "Item has been removed from store.", "success");
         router.push("/items"); // ডিলিট হওয়ার পর লিস্ট পেজে পাঠানো
       } catch (err) {

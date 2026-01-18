@@ -55,7 +55,10 @@ export default function AddItemPage() {
     if (result.isConfirmed) {
       setLoading(true);
       try {
-        await axios.post("http://localhost:5000/api/items", formData);
+        await axios.post(
+          "https://simple-mart-lnkp.vercel.app/api/items",
+          formData,
+        );
 
         Swal.fire({
           title: "Success!",
