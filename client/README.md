@@ -1,7 +1,6 @@
 # 🛒 SimpleMart - Premium E-commerce Management System
 
-
-![https://i.postimg.cc/FHY09cV2/Screenshot-7.png]
+![Project Banner](https://i.postimg.cc/FHY09cV2/Screenshot-7.png)
 
 SimpleMart is a modern full-stack application built with **Next.js 15 (App Router)** and **Express.js**.
 
