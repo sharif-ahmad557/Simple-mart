@@ -46,7 +46,7 @@ const ProductCard = ({ item }) => {
         </h3>
         <div className="flex gap-3">
           <Link
-            href={`/items/${item.id}`}
+            href={`/items/${item._id}`}
             className="flex-1 flex items-center justify-center gap-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white py-3 rounded-xl transition-all font-semibold italic"
           >
             <Eye size={18} /> Details

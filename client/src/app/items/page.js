@@ -135,7 +135,7 @@ export default function ItemsPage() {
             <AnimatePresence>
               {filteredItems.map((item) => (
                 <motion.div
-                  key={item.id}
+                  key={item._id}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}

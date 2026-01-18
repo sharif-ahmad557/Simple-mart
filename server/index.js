@@ -1,83 +1,72 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
+
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// প্রাথমিক মক ডাটা (Database-এর মতো কাজ করবে)
-let items = [
-  {
-    id: 1,
-    name: "Premium Wireless Headphones",
-    description:
-      "Experience high-quality sound with noise-canceling technology and 40-hour battery life.",
-    price: 199,
-    category: "Electronics",
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800",
-  },
-  {
-    id: 2,
-    name: "Modern Smart Watch",
-    description:
-      "Stay connected and track your fitness with this sleek and water-resistant smartwatch.",
-    price: 249,
-    category: "Gadgets",
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800",
-  },
-  {
-    id: 3,
-    name: "Minimalist Leather Backpack",
-    description:
-      "Handcrafted from genuine leather, perfect for carrying your laptop and daily essentials.",
-    price: 89,
-    category: "Fashion",
-    image:
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=800",
-  },
-  {
-    id: 4,
-    name: "Ultra HD Action Camera",
-    description:
-      "Capture your adventures in stunning 4K. Waterproof up to 30 meters with wide-angle lens.",
-    price: 150,
-    category: "Electronics",
-    image:
-      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=800",
-  },
-];
+// ১. ডাটাবেস কানেকশন (MongoDB Connection)
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ SimpleMart Database Connected Successfully!"))
+  .catch((err) => console.log("❌ DB Connection Error:", err));
 
-// ১. সব আইটেম পাওয়ার এপিআই (GET)
-app.get("/api/items", (req, res) => {
-  res.json(items);
+// ২. ডাটাবেস স্কিমা (Schema) তৈরি - ডাটা দেখতে কেমন হবে তার ম্যাপ
+const itemSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  category: { type: String, required: true },
+  image: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
-// ২. নির্দিষ্ট একটি আইটেম পাওয়ার এপিআই (GET)
-app.get("/api/items/:id", (req, res) => {
-  const item = items.find((i) => i.id === parseInt(req.params.id));
-  if (!item) return res.status(404).send("Item not found");
-  res.json(item);
+const Item = mongoose.model("Item", itemSchema);
+
+// ৩. সব আইটেম পাওয়ার API (GET) - ডাটাবেস থেকে আনবে
+app.get("/api/items", async (req, res) => {
+  try {
+    const items = await Item.find().sort({ createdAt: -1 }); // নতুনগুলো আগে দেখাবে
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-// ৩. নতুন আইটেম যোগ করার এপিআই (POST) - এটি শুধুমাত্র প্রোটেক্টেড পেজ থেকে কল হবে
-app.post("/api/items", (req, res) => {
-  const newItem = {
-    id: items.length > 0 ? Math.max(...items.map((i) => i.id)) + 1 : 1,
+// ৪. সিঙ্গেল আইটেম পাওয়ার API (GET)
+app.get("/api/items/:id", async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ message: "Item not found" });
+    res.json(item);
+  } catch (error) {
+    res.status(500).json({ message: "Invalid ID format" });
+  }
+});
+
+// ৫. নতুন আইটেম যোগ করার API (POST) - ডাটাবেসে সেভ করবে
+app.post("/api/items", async (req, res) => {
+  const newItem = new Item({
     name: req.body.name,
     description: req.body.description,
     price: req.body.price,
     category: req.body.category,
     image: req.body.image,
-  };
+  });
 
-  items.unshift(newItem);
-  res.status(201).json(newItem);
+  try {
+    const savedItem = await newItem.save();
+    res.status(201).json(savedItem);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 });
 
 app.listen(PORT, () => {
-  console.log(`SimpleMart Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
