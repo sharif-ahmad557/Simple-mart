@@ -6,9 +6,9 @@ SimpleMart is a modern full-stack application built with **Next.js 15 (App Route
 
 ## 🚀 Live Demo
 
-- **Frontend (Next.js):** [এখানে আপনার ভার্সেল লাইভ লিঙ্কটি বসান]
-- **Backend (Express):** [এখানে আপনার ব্যাকএন্ড সার্ভার লিঙ্কটি বসান]
-- **GitHub Repository:** [এখানে আপনার গিটহাব লিঙ্কটি বসান]
+- **Frontend (Next.js):** [https://simple-mart-tc7h.vercel.app/]
+- **Backend (Express):** [https://github.com/sharif-ahmad557/Simple-mart/tree/main/server]
+- **GitHub Repository:** [https://github.com/sharif-ahmad557/Simple-mart]
 
 ---
 
