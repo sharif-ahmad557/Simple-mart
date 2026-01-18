@@ -67,6 +67,28 @@ app.post("/api/items", async (req, res) => {
   }
 });
 
+// ৬. আইটেম আপডেট করার API (PUT)
+app.put("/api/items/:id", async (req, res) => {
+  try {
+    const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// ৭. আইটেম ডিলিট করার API (DELETE)
+app.delete("/api/items/:id", async (req, res) => {
+  try {
+    await Item.findByIdAndDelete(req.params.id);
+    res.json({ message: "Item deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });

@@ -9,17 +9,24 @@ import {
   Truck,
   Loader2,
   Star,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import toast from "react-hot-toast"; // টোস্ট ইম্পোর্ট
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
+import Link from "next/link";
 
 export default function ItemDetails() {
-  const { id } = useParams();
+  const { id } = useParams(); // URL থেকে আইডি নেওয়ার জন্য
   const router = useRouter();
+
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // ১. ডাটাবেস থেকে আইটেম ডিটেইলস আনা
     const fetchItemDetails = async () => {
       try {
         const response = await axios.get(
@@ -33,35 +40,54 @@ export default function ItemDetails() {
       }
     };
 
-    if (id) fetchItemDetails();
+    // ২. চেক করা ইউজার লগইন আছে কি না (এডিট/ডিলিট বাটন দেখানোর জন্য)
+    const checkAuth = () => {
+      const status = document.cookie.includes("isLoggedIn=true");
+      setIsLoggedIn(status);
+    };
+
+    if (id) {
+      fetchItemDetails();
+      checkAuth();
+    }
   }, [id]);
 
+  // কার্টে যোগ করার ফাংশন
   const addToCart = () => {
-    if (!item) return;
-
-    // ১. আগের কার্ট ডাটা আনা
     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    // ২. নতুন আইটেম যোগ করা
-    const updatedCart = [...existingCart, item];
-
-    // ৩. লোকাল স্টোরেজে সেভ করা
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-
-    // ৪. নেভবার আপডেট করার জন্য ইভেন্ট ফায়ার করা
-    window.dispatchEvent(new Event("cartUpdated"));
-
-    // ৫. সাকসেস মেসেজ
-    toast.success(`${item.name} added to cart!`, {
-      icon: "🛒",
-      style: {
-        borderRadius: "10px",
-        background: "#333",
-        color: "#fff",
-      },
-    });
+    localStorage.setItem("cart", JSON.stringify([...existingCart, item]));
+    window.dispatchEvent(new Event("cartUpdated")); // নেভবার আপডেট করার জন্য
+    toast.success(`${item.name} added to cart!`);
   };
-  // --- কার্ট লজিক শেষ ---
+
+  // আইটেম ডিলিট করার ফাংশন (SweetAlert2 সহ)
+  const handleDelete = async () => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this item!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#3b82f6",
+      confirmButtonText: "Yes, delete it!",
+      background: document.documentElement.classList.contains("dark")
+        ? "#0f172a"
+        : "#fff",
+      color: document.documentElement.classList.contains("dark")
+        ? "#fff"
+        : "#000",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:5000/api/items/${id}`);
+        Swal.fire("Deleted!", "Item has been removed from store.", "success");
+        router.push("/items"); // ডিলিট হওয়ার পর লিস্ট পেজে পাঠানো
+      } catch (err) {
+        toast.error("Failed to delete item!");
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -74,7 +100,7 @@ export default function ItemDetails() {
   if (!item) {
     return (
       <div className="h-screen flex flex-col items-center justify-center dark:text-white">
-        <h2 className="text-2xl font-bold">Item Not Found!</h2>
+        <h2 className="text-2xl font-bold italic">Item Not Found!</h2>
         <button
           onClick={() => router.back()}
           className="mt-4 text-blue-600 underline font-bold"
@@ -87,54 +113,42 @@ export default function ItemDetails() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
-
       <div className="max-w-7xl mx-auto px-6 py-12">
+        {/* ব্যাক বাটন */}
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 mb-10 transition-colors group font-bold"
+          className="flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-8 transition-colors group font-bold"
         >
           <ArrowLeft
             size={20}
             className="group-hover:-translate-x-1 transition-transform"
           />
-          Back to Store
+          Back to Collection
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* ইমেজ সেকশন */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          {/* ১. ইমেজ সেকশন (হোভার ইফেক্টসহ) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="relative rounded-[3rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-slate-900"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="rounded-[3rem] overflow-hidden shadow-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-slate-900"
           >
             <img
               src={item.image}
               alt={item.name}
-              className="w-full h-[550px] object-cover hover:scale-110 transition-transform duration-700"
+              className="w-full h-[550px] object-cover hover:scale-105 transition-transform duration-700"
             />
-            <div className="absolute top-6 left-6 bg-blue-600 text-white px-6 py-2 rounded-full font-bold shadow-xl">
-              {item.category}
-            </div>
           </motion.div>
 
-          {/* কন্টেন্ট সেকশন */}
+          {/* ২. কন্টেন্ট সেকশন */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             className="flex flex-col"
           >
-            <div className="flex items-center gap-2 mb-4">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={18}
-                  className="text-yellow-400 fill-current"
-                />
-              ))}
-              <span className="text-sm text-gray-500 ml-2 font-medium">
-                (4.8 / 5.0 Customer Rating)
-              </span>
-            </div>
+            <span className="text-blue-600 font-black uppercase tracking-[0.2em] text-sm mb-4">
+              {item.category}
+            </span>
 
             <h1 className="text-4xl md:text-6xl font-black dark:text-white mb-6 leading-tight">
               {item.name}
@@ -144,40 +158,59 @@ export default function ItemDetails() {
               ${item.price}
             </p>
 
-            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-10">
+            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-10 italic">
               {item.description}
             </p>
 
+            {/* ফিচারস */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
               <div className="flex items-center gap-4 p-5 rounded-3xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-gray-800">
                 <Truck className="text-blue-600" size={28} />
-                <div>
-                  <p className="font-bold dark:text-white">Free Delivery</p>
-                  <p className="text-xs text-gray-500">Orders over $100</p>
-                </div>
+                <span className="font-bold dark:text-white">
+                  Free Worldwide Delivery
+                </span>
               </div>
               <div className="flex items-center gap-4 p-5 rounded-3xl bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-gray-800">
                 <ShieldCheck className="text-blue-600" size={28} />
-                <div>
-                  <p className="font-bold dark:text-white">Secure Warranty</p>
-                  <p className="text-xs text-gray-500">100% Genuine product</p>
-                </div>
+                <span className="font-bold dark:text-white">
+                  100% Secure Payment
+                </span>
               </div>
             </div>
 
-            {/* আপডেট করা অ্যাড টু কার্ট বাটন */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={addToCart}
-              className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-[2rem] font-black text-xl flex items-center justify-center gap-4 shadow-2xl shadow-blue-500/40 transition-all"
-            >
-              <ShoppingCart size={24} /> Add to Shopping Cart
-            </motion.button>
+            {/* ৩. বাটন সেকশন */}
+            <div className="space-y-4">
+              {/* মেইন অ্যাড টু কার্ট বাটন */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={addToCart}
+                className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-[2rem] font-black text-xl flex items-center justify-center gap-4 shadow-xl shadow-blue-500/30 transition-all"
+              >
+                <ShoppingCart size={24} /> Add to Cart
+              </motion.button>
+
+              {/* অ্যাডমিন কন্ট্রোল (শুধুমাত্র লগইন থাকলে দেখাবে) */}
+              {isLoggedIn && (
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t dark:border-gray-800">
+                  <Link
+                    href={`/items/edit/${item._id}`}
+                    className="flex items-center justify-center gap-2 py-4 bg-gray-100 dark:bg-slate-800 dark:text-white rounded-2xl font-bold hover:bg-blue-600 hover:text-white transition-all border dark:border-gray-700"
+                  >
+                    <Edit size={20} /> Edit Product
+                  </Link>
+                  <button
+                    onClick={handleDelete}
+                    className="flex items-center justify-center gap-2 py-4 bg-red-50 text-red-600 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all"
+                  >
+                    <Trash2 size={20} /> Delete Product
+                  </button>
+                </div>
+              )}
+            </div>
           </motion.div>
         </div>
       </div>
-
     </main>
   );
 }
